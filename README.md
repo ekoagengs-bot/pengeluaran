@@ -1,27 +1,34 @@
-# MoniKas — Pemantauan Pengeluaran
+# MoniKas V2 — Pemantauan Pengeluaran
 
-Aplikasi web responsif untuk mencatat dan memantau pengeluaran serta pendapatan.
+Aplikasi web responsif untuk memantau pendapatan, pengeluaran, saldo, transaksi, dan anggaran kategori.
 
-## Fitur
-- Dashboard pendapatan, pengeluaran, dan saldo
-- Transaksi pengeluaran/pendapatan
-- Kategori pengeluaran
+## V2
+- Login / daftar akun dengan Firebase Authentication (email + password)
+- Database cloud dengan Cloud Firestore
+- Data transaksi terpisah berdasarkan akun pengguna
+- Tambah, edit, hapus transaksi
 - Anggaran per kategori
-- Progress anggaran
-- Filter bulan
-- Ekspor data JSON
-- PWA / bisa dipasang ke layar utama Android
-- Penyimpanan lokal browser
+- Dashboard bulanan
+- Pencarian transaksi
+- Ekspor CSV
+- PWA / responsif untuk Android dan desktop
 
-## Publikasi GitHub Pages
-1. Buka **Settings** repository.
-2. Pilih **Pages**.
-3. Pada **Build and deployment**, pilih **Deploy from a branch**.
-4. Branch: `main` dan folder: `/ (root)`.
-5. Save.
-6. Tunggu GitHub Pages aktif.
+## Struktur
+- `index.html` — aplikasi utama
+- `firebase-config.js` — konfigurasi Firebase Web App
+- `firestore.rules` — aturan keamanan Firestore per pengguna
+- `manifest.json` — PWA
+- `sw.js` — service worker
 
-URL umumnya: `https://ekoagengs-bot.github.io/pengeluaran/`
+## Setup Firebase
+Firebase perlu dibuat dan Web App perlu didaftarkan. Salin konfigurasi Web App dari Firebase Console lalu isi `firebase-config.js`.
 
-## Catatan
-Versi ini menggunakan `localStorage`, sehingga data tersimpan pada perangkat/browser yang digunakan. Tahap berikutnya dapat menambahkan login dan database online (Supabase/Firebase) agar data tersinkron antar perangkat.
+1. Buat project di Firebase Console.
+2. Tambahkan Web App.
+3. Aktifkan Authentication > Sign-in method > Email/Password.
+4. Buat Cloud Firestore Database.
+5. Atur Firestore Rules menggunakan isi `firestore.rules`.
+6. Ganti nilai `GANTI_*` di `firebase-config.js` dengan config Web App Anda.
+7. Publikasikan repository ini menggunakan GitHub Pages.
+
+Firebase saat ini mendukung modul JavaScript melalui CDN gstatic dan dokumentasi resminya merekomendasikan modular API untuk aplikasi produksi.
