@@ -5,7 +5,17 @@ const DRIVE_FOLDER_NAME='MoniKas Struk';
 const SHEET_TX='TRANSAKSI';
 const SHEET_SUMMARY='REKAP BULANAN';
 
-function doGet(){return json_({ok:true,app:APP_NAME,message:'MoniKas backend aktif'});}
+function doGet(){
+  try{
+    const ss=SpreadsheetApp.openById(SPREADSHEET_ID);
+    getOrCreateTransactions_(ss);
+    rebuildSummary_(ss);
+    getOrCreateFolder_();
+    return json_({ok:true,app:APP_NAME,message:'MoniKas backend aktif dan spreadsheet siap',sheets:[SHEET_TX,SHEET_SUMMARY],driveFolder:DRIVE_FOLDER_NAME});
+  }catch(err){
+    return json_({ok:false,error:String(err)});
+  }
+}
 function doPost(e){try{const p=JSON.parse(e?.postData?.contents||'{}');if(p.action==='ping')return json_({ok:true});if(p.action==='saveTransaction')return saveTransaction_(p);if(p.action==='deleteTransaction')return deleteTransaction_(p);return json_({ok:false,error:'Action tidak dikenal'});}catch(err){return json_({ok:false,error:String(err)})}}
 
 function saveTransaction_(p){
