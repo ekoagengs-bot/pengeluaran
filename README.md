@@ -1,52 +1,43 @@
-# MoniKas V2 — AI Detector Struk
+# MoniKas — Pemantauan Pengeluaran
 
-Aplikasi web responsif untuk memantau pengeluaran dan pendapatan, memindai struk dengan OCR, lalu mengirim rekap transaksi ke Google Sheets serta foto struk ke Google Drive.
+Aplikasi web/PWA untuk memantau pengeluaran dan pendapatan, memindai struk dengan OCR, menyimpan foto struk ke Google Drive, dan merekap transaksi ke Google Sheets.
 
 ## Fitur
-- Foto struk dari kamera Android / iPhone / iPad / galeri
+- Langsung masuk ke dashboard, **tanpa login**
+- Foto struk dari kamera Android/iPhone/iPad atau galeri
 - OCR Tesseract.js
-- Deteksi nama toko, tanggal, nominal total, dan kategori
-- Form transaksi terisi otomatis dan tetap bisa dikoreksi
-- Dashboard pendapatan, pengeluaran, saldo, rasio
-- Anggaran per kategori
-- Pencarian transaksi
-- Ekspor CSV
-- Penyimpanan lokal perangkat
-- Rekap transaksi ke Google Sheets
-- Foto struk disimpan ke Google Drive
-- PWA siap dipasang ke Home Screen Android dan iOS
+- Deteksi toko, tanggal, total, dan kategori secara otomatis
+- Form transaksi terisi otomatis dan tetap dapat dikoreksi
+- Pendapatan, pengeluaran, saldo, dan anggaran kategori
+- Pencarian, edit, hapus, dan ekspor CSV
+- Penyimpanan lokal perangkat sebagai cadangan
+- Sinkronisasi transaksi ke Google Sheets
+- Foto struk ke Google Drive
+- PWA untuk Android dan iOS
 
-## Versi iOS
-Gunakan Safari pada iPhone/iPad:
-1. Buka `https://ekoagengs-bot.github.io/pengeluaran/ios.html`
-2. Tunggu aplikasi terbuka atau tekan **Buka MoniKas**.
-3. Tekan tombol **Bagikan** di Safari.
-4. Pilih **Tambahkan ke Layar Utama**.
-5. Jalankan MoniKas dari ikon Home Screen.
-
-Versi iOS menggunakan halaman launcher dengan metadata Apple, safe-area support, dan ikon aplikasi. Kamera pada Safari dapat digunakan untuk memotret struk.
-
-## Google Sheet tujuan
-Spreadsheet ID:
+## Google Sheet
+Spreadsheet tujuan:
 `1uF7zUH5boy3VA7abBgWQETccIUp1_lrvYDyeDsrWBlo`
 
-## Backend Google Apps Script
-URL Web App:
-`https://script.google.com/macros/s/AKfycbxNM8ktGCa85FzdTHhjnynnJAzy1nL-7VXYaPiaKTsY9Xa79AVn3B8n_FcKUj8UDLyW9Q/exec`
+## Google Apps Script
+Web App aktif:
+`https://script.google.com/macros/s/AKfycbz8kXgT4mA_plY2n-g6XVSbqSy57ZVphjdjs4vF8_bo32bWD0YpSqQ0tK3zYB6OmC4_6w/exec`
 
-Backend otomatis membuat sheet:
+Script otomatis membuat:
 - `TRANSAKSI`
 - `REKAP BULANAN`
+- folder Drive `MoniKas Struk`
 
-Foto struk disimpan ke folder Google Drive bernama `MoniKas Struk`.
+## GitHub Pages
+Aktifkan:
+`Settings → Pages → Deploy from a branch → main → / (root)`
 
-## Publikasi GitHub Pages
-`Settings → Pages → Deploy from a branch → main → / (root)`.
-
-URL utama:
+URL:
 `https://ekoagengs-bot.github.io/pengeluaran/`
 
-Launcher iOS:
-`https://ekoagengs-bot.github.io/pengeluaran/ios.html`
+## iOS
+Buka URL utama melalui Safari lalu pilih:
+`Bagikan → Tambahkan ke Layar Utama`.
 
-Catatan: GitHub Pages tidak dapat menulis langsung ke spreadsheet privat. Google Apps Script dipakai sebagai backend penulis data. Aplikasi tetap dapat digunakan secara lokal meskipun backend belum dikonfigurasi.
+## Catatan
+Data transaksi terlebih dahulu disimpan di perangkat. Saat koneksi tersedia aplikasi mengirim data ke Google Apps Script. Tombol **Sinkronisasi** dapat digunakan untuk mengirim ulang transaksi yang ada di perangkat.
