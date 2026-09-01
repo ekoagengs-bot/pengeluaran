@@ -1,4 +1,28 @@
-const CACHE='monikas-v2-sheet-sync-1';
-self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','./index.html','./manifest.json','./sheet-sync.js'])))});
-self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){e.respondWith(fetch(e.request).then(async res=>{const text=await res.text();const patched=text.includes('sheet-sync.js')?text:text.replace('</body>','<script src="./sheet-sync.js"></script></body>');return new Response(patched,{status:res.status,statusText:res.statusText,headers:{'Content-Type':'text/html; charset=utf-8'}})}).catch(()=>caches.match('./index.html')))}else{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))}});
+const CACHE='monikas-v3-no-login-1';
+self.addEventListener('install',event=>{
+  event.waitUntil(
+    caches.open(CACHE).then(cache=>cache.addAll([
+      './',
+      './index.html',
+      './manifest.json',
+      './icon.svg',
+      './backend-config.js',
+      './sheet-sync.js'
+    ])).then(()=>self.skipWaiting())
+  );
+});
+self.addEventListener('activate',event=>{
+  event.waitUntil(
+    caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())
+  );
+});
+self.addEventListener('fetch',event=>{
+  if(event.request.method!=='GET') return;
+  event.respondWith(
+    fetch(event.request).then(response=>{
+      const copy=response.clone();
+      caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});
+      return response;
+    }).catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html')))
+  );
+});
