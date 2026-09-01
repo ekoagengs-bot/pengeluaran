@@ -4,114 +4,132 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<meta name="description" content="MoniKas V2 - pemantauan pengeluaran dengan scan struk otomatis">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MoniKas">
+<meta name="description" content="MoniKas - pemantauan pengeluaran dan scan struk otomatis">
 <link rel="manifest" href="manifest.json">
-<title>MoniKas V2 • Scan Struk</title>
+<link rel="apple-touch-icon" href="icon.svg">
+<title>MoniKas • Pemantauan Pengeluaran</title>
 <style>
-:root{--bg:#f3f6fb;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;--primary:#2563eb;--danger:#dc2626;--success:#16a34a;--warning:#d97706;--shadow:0 10px 30px rgba(15,23,42,.08);--radius:18px}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.wrap{max-width:1120px;margin:auto;padding:14px}
-header{background:#0f172a;color:#fff;position:sticky;top:0;z-index:20}.head{max-width:1120px;margin:auto;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-size:24px;font-weight:900}.sub{font-size:12px;opacity:.72}.user{display:flex;align-items:center;gap:8px}.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#2563eb;font-weight:900}.head button{border:1px solid #334155;background:#1e293b;color:#fff;border-radius:10px;padding:9px 12px}
-.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;margin:12px 0}.input,.toolbar input,.toolbar select{width:100%;padding:12px 13px;border:1px solid #cbd5e1;border-radius:13px;background:#fff;outline:none}.btn{border:0;border-radius:13px;padding:12px 15px;background:var(--primary);color:#fff;font-weight:800}.btn.secondary{background:#e2e8f0;color:var(--text)}.btn.danger{background:#fee2e2;color:#991b1b}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}.label{font-size:12px;color:var(--muted)}.value{font-size:26px;font-weight:900;margin-top:5px}.green{color:var(--success)}.red{color:var(--danger)}.blue{color:var(--primary)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.topline{display:flex;justify-content:space-between;align-items:center;gap:8px}.topline h2,.topline h3{margin:0}.pill{font-size:12px;font-weight:800;color:#1d4ed8;background:#dbeafe;padding:6px 9px;border-radius:999px}
-.form{display:grid;gap:10px;margin-top:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.money{text-align:right}.list{margin-top:8px}.item{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:12px 0}.item:last-child{border-bottom:0}.title{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:3px}.empty{text-align:center;color:var(--muted);padding:24px}.actions{display:flex;gap:6px}.icon{border:0;background:#eef2ff;padding:7px 9px;border-radius:9px}.budget{margin:12px 0}.bline{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:6px}.bar{height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--primary);border-radius:99px}.over .bar i{background:var(--danger)}
-.receipt-box{border:1px dashed #94a3b8;border-radius:16px;padding:13px;background:#f8fafc}.receipt-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.preview{margin-top:10px;width:100%;max-height:240px;object-fit:contain;border-radius:13px;background:#e2e8f0}.scan{background:#eff6ff;color:#1d4ed8;border-radius:12px;padding:10px;font-size:13px;margin-top:10px}.progress{height:8px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;width:0;background:var(--primary)}
-.login{min-height:100vh;display:grid;place-items:center;padding:20px}.login-card{width:min(420px,100%);background:#fff;border-radius:24px;border:1px solid var(--line);padding:24px;box-shadow:var(--shadow)}.logo{width:58px;height:58px;border-radius:18px;background:#0f172a;color:#fff;display:grid;place-items:center;font-weight:900;font-size:28px;margin-bottom:14px}.tabs{display:grid;grid-template-columns:1fr 1fr;background:#eef2f7;padding:4px;border-radius:11px;margin:15px 0}.tabs button{border:0;background:transparent;padding:10px;border-radius:8px;color:var(--muted);font-weight:800}.tabs .active{background:#fff;color:var(--text)}.alert{padding:10px;border-radius:11px;background:#fef2f2;color:#991b1b;font-size:13px}.info{padding:10px;border-radius:11px;background:#eff6ff;color:#1d4ed8;font-size:13px}
-.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 14px;border-radius:12px;z-index:100;box-shadow:var(--shadow)}
-.modal{position:fixed;inset:0;background:rgba(15,23,42,.5);display:grid;place-items:center;padding:16px;z-index:80}.modalbox{width:min(520px,100%);background:#fff;border-radius:20px;padding:18px}.modalbox img{width:100%;max-height:70vh;object-fit:contain;border-radius:12px;background:#f1f5f9}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
-@media(max-width:800px){.cards,.grid2{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.toolbar .wide{grid-column:1/-1}.row{grid-template-columns:1fr}.user .email{display:none}}
+:root{--bg:#f3f6fb;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#dbe3ee;--primary:#2563eb;--danger:#dc2626;--success:#16a34a;--shadow:0 10px 30px rgba(15,23,42,.08);--radius:18px}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.wrap{max-width:1180px;margin:auto;padding:16px}
+header{background:#0f172a;color:#fff;position:sticky;top:0;z-index:30}.head{max-width:1180px;margin:auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:25px;font-weight:900}.sub{font-size:12px;opacity:.72}.head-actions{display:flex;gap:8px;align-items:center}.head-btn{border:1px solid #334155;background:#1e293b;color:#fff;border-radius:11px;padding:9px 12px;font-weight:800}.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#1d4ed8;background:#dbeafe;padding:6px 10px;border-radius:999px}
+.toolbar{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;margin:14px 0}.input{width:100%;padding:12px 13px;border:1px solid #cbd5e1;border-radius:13px;background:#fff;outline:none}.input:focus{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb18}.btn{border:0;border-radius:13px;padding:12px 16px;background:var(--primary);color:#fff;font-weight:900}.btn.secondary{background:#e2e8f0;color:var(--text)}.btn.danger{background:#fee2e2;color:#991b1b}.btn.success{background:#dcfce7;color:#166534}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}.label{font-size:12px;color:var(--muted)}.value{font-size:28px;font-weight:950;margin-top:6px}.green{color:var(--success)}.red{color:var(--danger)}.blue{color:var(--primary)}
+.grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:12px}.topline{display:flex;justify-content:space-between;align-items:center;gap:8px}.form{display:grid;gap:10px;margin-top:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.receipt-box{border:1.5px dashed #94a3b8;border-radius:16px;padding:14px;background:#f8fafc;margin-top:12px}.receipt-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}.receipt-actions label{display:grid;place-items:center}.receipt-actions input{display:none}.preview{width:100%;max-height:280px;object-fit:contain;border-radius:13px;background:#e2e8f0;margin-top:10px}.scan{background:#eff6ff;color:#1d4ed8;border-radius:13px;padding:11px;margin-top:10px}.progress{height:8px;border-radius:99px;background:#dbe3ee;overflow:hidden;margin-top:8px}.progress i{display:block;width:0;height:100%;background:var(--primary);transition:width .2s}.hint{font-size:12px;color:var(--muted);line-height:1.5}
+.budget{margin:13px 0}.bline{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:6px}.bar{height:10px;background:#e2e8f0;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--primary);border-radius:99px}.over .bar i{background:var(--danger)}
+.list{margin-top:8px}.item{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:13px 0}.item:last-child{border-bottom:0}.title{font-weight:850}.meta{font-size:12px;color:var(--muted);margin-top:4px}.amount{font-weight:900;white-space:nowrap}.actions{display:flex;gap:6px}.icon{border:0;background:#eef2ff;border-radius:9px;padding:7px 9px}
+.footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:11px 15px;border-radius:13px;z-index:99;box-shadow:var(--shadow);max-width:min(92vw,520px);text-align:center}.modal{position:fixed;inset:0;background:#0f172a88;z-index:80;display:grid;place-items:center;padding:16px}.modalbox{width:min(560px,100%);background:#fff;border-radius:20px;padding:18px;max-height:90vh;overflow:auto}.modalbox img{width:100%;max-height:70vh;object-fit:contain;border-radius:12px;background:#f1f5f9}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+@media(max-width:860px){.cards,.grid2{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.toolbar .monthwide{grid-column:1/-1}.receipt-actions{grid-template-columns:1fr 1fr}.receipt-actions label:last-child{grid-column:1/-1}.row{grid-template-columns:1fr}.head{align-items:flex-start}.head-actions .optional{display:none}}
 </style>
 </head>
 <body>
-<section id="loginView" class="login">
- <div class="login-card">
-  <div class="logo">M</div><h1>MoniKas V2</h1><p style="color:var(--muted)">Pemantauan pengeluaran + scan struk otomatis</p>
-  <div class="tabs"><button id="loginTab" class="active">Masuk</button><button id="signupTab">Daftar</button></div>
-  <div id="authMsg"></div>
-  <form id="authForm" class="form">
-   <input id="email" class="input" type="email" placeholder="Email" required>
-   <input id="password" class="input" type="password" minlength="6" placeholder="Password" required>
-   <input id="name" class="input hidden" placeholder="Nama pengguna">
-   <button class="btn" id="authBtn">Masuk</button>
-   <button class="btn secondary" type="button" id="demoBtn">Gunakan Mode Perangkat</button>
-  </form>
-  <div style="margin-top:14px;color:var(--muted);font-size:12px">Mode Perangkat menyimpan data di perangkat ini tanpa akun cloud.</div>
- </div>
-</section>
-<section id="appView" class="hidden">
-<header><div class="head"><div><div class="brand">MoniKas</div><div class="sub">Pemantauan pengeluaran • AI Detector Struk</div></div><div class="user"><div class="avatar" id="avatar">U</div><span class="email" id="userEmail">Mode Perangkat</span><button id="logoutBtn">Keluar</button></div></div></header>
-<main class="wrap">
- <div class="toolbar"><input id="month" type="month" class="wide"><button id="exportBtn" class="btn secondary">Ekspor CSV</button><button id="resetBtn" class="btn danger">Reset</button></div>
- <section class="cards">
-  <div class="card"><div class="label">Pendapatan</div><div class="value green" id="income">Rp 0</div></div>
-  <div class="card"><div class="label">Pengeluaran</div><div class="value red" id="expense">Rp 0</div></div>
-  <div class="card"><div class="label">Saldo</div><div class="value blue" id="balance">Rp 0</div></div>
- </section>
- <section class="grid2">
-  <div class="card">
-   <div class="topline"><h2 id="formTitle">Tambah Transaksi</h2><span id="sync" class="pill">Perangkat</span></div>
-   <div class="receipt-box" style="margin-top:12px">
-    <div class="topline"><div><b>📷 Foto Struk</b><div style="font-size:12px;color:var(--muted);margin-top:3px">Foto struk → OCR → deteksi otomatis</div></div><span class="pill">AI Detector</span></div>
-    <div class="receipt-buttons"><label class="btn" style="display:grid;place-items:center"><input id="camera" type="file" accept="image/*" capture="environment" hidden>Ambil Foto</label><label class="btn secondary" style="display:grid;place-items:center"><input id="gallery" type="file" accept="image/*" hidden>Pilih Foto</label></div>
-    <img id="preview" class="preview hidden" alt="Preview struk">
-    <div id="scanBox" class="scan hidden"><b id="scanText">Mempersiapkan pemindaian…</b><div class="progress"><i id="scanProgress"></i></div></div>
-   </div>
-   <form id="txForm" class="form">
-    <div class="row"><select id="type" class="input"><option value="expense">Pengeluaran</option><option value="income">Pendapatan</option></select><input id="date" class="input" type="date" required></div>
-    <input id="merchant" class="input" placeholder="Nama toko / sumber pemasukan">
-    <input id="desc" class="input" placeholder="Keterangan" required>
-    <div class="row"><select id="category" class="input"><option>Makanan</option><option>Transportasi</option><option>Belanja</option><option>Tagihan</option><option>Pendidikan</option><option>Kesehatan</option><option>Hiburan</option><option>Lainnya</option></select><input id="amount" class="input money" type="number" min="1" step="1" placeholder="Nominal (Rp)" required></div>
-    <button id="saveTx" class="btn">Simpan Transaksi</button>
-   </form>
+<header>
+  <div class="head">
+    <div><div class="brand">MoniKas</div><div class="sub">Pemantauan pengeluaran • Scan Struk Otomatis</div></div>
+    <div class="head-actions"><span class="pill" id="syncPill">Google Sheet</span><button class="head-btn" id="syncBtn">↻ Sinkronisasi</button></div>
   </div>
-  <div class="card"><div class="topline"><h2>Ringkasan Anggaran</h2><span class="pill" id="ratio">0%</span></div><div id="budgets"></div><div style="margin-top:18px;padding:12px;background:#f8fafc;border-radius:12px"><div class="label">Tips Detector</div><div style="font-size:13px;margin-top:4px;color:var(--muted)">Pastikan angka TOTAL terlihat jelas pada struk. Hasil scan selalu perlu dicek sebelum disimpan.</div></div></div>
- </section>
- <section class="card" style="margin-top:12px"><div class="topline"><h2>Transaksi</h2><input id="search" class="input" style="max-width:310px" placeholder="Cari transaksi"></div><div id="list" class="list"></div></section>
- <div style="text-align:center;color:var(--muted);font-size:12px;padding:18px">MoniKas V2 • Foto diproses di browser untuk OCR</div>
-</main></section>
+</header>
+<main class="wrap">
+  <div class="toolbar">
+    <input id="month" class="input monthwide" type="month">
+    <button id="syncBtn2" class="btn secondary">Kirim Data</button>
+    <button id="exportBtn" class="btn secondary">Ekspor CSV</button>
+    <button id="resetBtn" class="btn danger">Reset</button>
+  </div>
+
+  <section class="cards">
+    <div class="card"><div class="label">Pendapatan</div><div class="value green" id="income">Rp 0</div></div>
+    <div class="card"><div class="label">Pengeluaran</div><div class="value red" id="expense">Rp 0</div></div>
+    <div class="card"><div class="label">Saldo</div><div class="value blue" id="balance">Rp 0</div></div>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <div class="topline"><h2 id="formTitle">Tambah Transaksi</h2><span class="pill" id="sourcePill">Perangkat + Cloud</span></div>
+      <div class="receipt-box">
+        <div class="topline"><div><b>📷 Foto Struk</b><div class="hint">Foto → OCR → deteksi tanggal, toko, total, dan kategori</div></div><span class="pill">AI Detector</span></div>
+        <div class="receipt-actions">
+          <label class="btn"><input id="camera" type="file" accept="image/*" capture="environment">Ambil Foto</label>
+          <label class="btn secondary"><input id="gallery" type="file" accept="image/*">Pilih Foto</label>
+          <button class="btn secondary" id="clearReceipt" type="button">Hapus Foto</button>
+        </div>
+        <img id="preview" class="preview hidden" alt="Preview struk">
+        <div id="scanBox" class="scan hidden"><b id="scanText">Mempersiapkan scanner…</b><div class="progress"><i id="scanProgress"></i></div></div>
+      </div>
+
+      <form id="txForm" class="form">
+        <div class="row">
+          <select id="type" class="input"><option value="expense">Pengeluaran</option><option value="income">Pendapatan</option></select>
+          <input id="date" class="input" type="date" required>
+        </div>
+        <input id="merchant" class="input" placeholder="Nama toko / sumber pemasukan">
+        <input id="desc" class="input" placeholder="Keterangan" required>
+        <div class="row">
+          <select id="category" class="input"><option>Makanan</option><option>Transportasi</option><option>Belanja</option><option>Tagihan</option><option>Pendidikan</option><option>Kesehatan</option><option>Hiburan</option><option>Lainnya</option></select>
+          <input id="amount" class="input" type="number" min="1" step="1" placeholder="Nominal (Rp)" required>
+        </div>
+        <button id="saveTx" class="btn" type="submit">Simpan Transaksi</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="topline"><h2>Ringkasan Anggaran</h2><span class="pill" id="ratio">0%</span></div>
+      <div id="budgets"></div>
+      <div style="margin-top:18px;padding:13px;background:#f8fafc;border-radius:13px">
+        <div class="label">Status penyimpanan</div>
+        <div id="statusText" style="font-weight:800;margin-top:4px">Data tersimpan di perangkat dan dikirim ke Google Sheet.</div>
+        <div class="hint" style="margin-top:7px">Jika koneksi internet sedang bermasalah, data tetap tersimpan di perangkat dan dapat dikirim ulang dengan tombol Sinkronisasi.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:12px">
+    <div class="topline"><h2>Transaksi</h2><input id="search" class="input" style="max-width:320px" placeholder="Cari transaksi"></div>
+    <div id="list" class="list"></div>
+  </section>
+  <div class="footer">MoniKas • Tanpa login • Google Sheet + Google Drive • PWA Android & iOS</div>
+</main>
+
 <div id="modal" class="modal hidden"><div class="modalbox"><div class="topline"><h3 id="modalTitle">Struk</h3><button class="icon" id="modalClose">✕</button></div><div id="modalContent" style="margin-top:10px"></div><div class="modal-actions"><button class="btn secondary" id="modalOk">Tutup</button></div></div></div>
 <div id="toast" class="toast hidden"></div>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-const KEY='monikas_v2_local';
+const GAS_URL='https://script.google.com/macros/s/AKfycbz8kXgT4mA_plY2n-g6XVSbqSy57ZVphjdjs4vF8_bo32bWD0YpSqQ0tK3zYB6OmC4_6w/exec';
+const KEY='monikas_v3_local';
 const DEFAULT={transactions:[],budgets:{Makanan:1500000,Transportasi:800000,Belanja:1000000,Tagihan:1500000,Pendidikan:500000,Kesehatan:500000,Hiburan:400000,Lainnya:500000}};
-const CATS=Object.keys(DEFAULT.budgets); let data=load(),currentReceipt=null,editId=null,receiptDB=null,cloudUser=null,authMode='login';
+const CATS=Object.keys(DEFAULT.budgets);
+let data=loadData(), editId=null, currentReceipt=null, syncing=false;
 const $=id=>document.getElementById(id);
 const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
-const today=()=>new Date().toISOString().slice(0,10); const monthNow=()=>today().slice(0,7);
+const today=()=>{const d=new Date();const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())};
+const monthNow=()=>today().slice(0,7);
 $('month').value=monthNow(); $('date').value=today();
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(DEFAULT)}catch{return structuredClone(DEFAULT)}}
-function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
-function toast(msg){$('toast').textContent=msg;$('toast').classList.remove('hidden');clearTimeout(window.__t);window.__t=setTimeout(()=>$('toast').classList.add('hidden'),2500)}
+function loadData(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');return d&&Array.isArray(d.transactions)?{...structuredClone(DEFAULT),...d,budgets:{...DEFAULT.budgets,...(d.budgets||{})}}:structuredClone(DEFAULT)}catch{return structuredClone(DEFAULT)}}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.add('hidden'),3000)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function filtered(){const m=$('month').value||monthNow(),q=$('search').value.trim().toLowerCase();return data.transactions.filter(t=>t.date.slice(0,7)===m).filter(t=>!q||`${t.desc} ${t.merchant||''} ${t.category}`.toLowerCase().includes(q)).sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id)}
-function render(){const tx=filtered(),m=$('month').value||monthNow(),all=data.transactions.filter(t=>t.date.slice(0,7)===m),inc=all.filter(t=>t.type==='income').reduce((a,b)=>a+b.amount,0),exp=all.filter(t=>t.type==='expense').reduce((a,b)=>a+b.amount,0);$('income').textContent=rupiah(inc);$('expense').textContent=rupiah(exp);$('balance').textContent=rupiah(inc-exp);$('ratio').textContent=inc?Math.round(exp/inc*100)+'%':'0%';
- const sums={};all.filter(t=>t.type==='expense').forEach(t=>sums[t.category]=(sums[t.category]||0)+t.amount);$('budgets').innerHTML=CATS.map(c=>{const b=data.budgets[c]||0,v=sums[c]||0,p=b?Math.round(v/b*100):0;return `<div class="budget ${p>100?'over':''}"><div class="bline"><span>${c}</span><span>${rupiah(v)} / ${rupiah(b)}</span></div><div class="bar"><i style="width:${Math.min(100,p)}%"></i></div></div>`}).join('');$('list').innerHTML=tx.length?tx.map(t=>`<div class="item"><div><div class="title">${esc(t.desc)}</div><div class="meta">${t.date} • ${esc(t.category)}${t.merchant?' • '+esc(t.merchant):''}${t.receipt?' • 📷 Struk':''}</div></div><div class="actions"><b class="${t.type==='income'?'green':'red'}">${t.type==='income'?'+':'−'} ${rupiah(t.amount)}</b><button class="icon" onclick="showReceipt('${t.id}')">📷</button><button class="icon" onclick="editTx('${t.id}')">✏️</button><button class="icon" onclick="deleteTx('${t.id}')">🗑️</button></div></div>`).join(''):'<div class="empty">Belum ada transaksi.</div>'}
-async function putReceipt(id,blob){const db=await openReceiptDB();return new Promise((res,rej)=>{const tx=db.transaction('receipts','readwrite');tx.objectStore('receipts').put(blob,id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
-async function getReceipt(id){const db=await openReceiptDB();return new Promise((res,rej)=>{const tx=db.transaction('receipts','readonly');const r=tx.objectStore('receipts').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
-function openReceiptDB(){if(receiptDB)return Promise.resolve(receiptDB);return new Promise((res,rej)=>{const r=indexedDB.open('monikas_receipts',1);r.onupgradeneeded=()=>r.result.createObjectStore('receipts');r.onsuccess=()=>{receiptDB=r.result;res(receiptDB)};r.onerror=()=>rej(r.error)})}
-async function resizeImage(file,max=1400,quality=.72){const bmp=await createImageBitmap(file);const scale=Math.min(1,max/bmp.width,max/bmp.height);const c=document.createElement('canvas');c.width=Math.round(bmp.width*scale);c.height=Math.round(bmp.height*scale);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);return new Promise(r=>c.toBlob(r,'image/jpeg',quality))}
-async function scanReceipt(file){if(!window.Tesseract)return toast('OCR belum tersedia. Coba refresh halaman.');$('scanBox').classList.remove('hidden');$('scanText').textContent='Membaca struk…';$('scanProgress').style.width='5%';const blob=await resizeImage(file);currentReceipt=blob;$('preview').src=URL.createObjectURL(blob);$('preview').classList.remove('hidden');try{const {data:{text}}=await Tesseract.recognize(blob,'ind+eng',{logger:m=>{if(m.progress!=null)$('scanProgress').style.width=Math.max(5,Math.round(m.progress*100))+'%';if(m.status)$('scanText').textContent='AI Detector: '+m.status}});const parsed=parseReceipt(text);applyParsed(parsed);$('scanText').textContent='Berhasil. Periksa hasil sebelum simpan.';toast('Struk berhasil dibaca.')}catch(e){console.error(e);$('scanText').textContent='Gagal membaca struk. Isi manual.';toast('OCR gagal membaca struk.')}}
-function normalize(s){return String(s||'').replace(/\s+/g,' ').trim()}
-function parseReceipt(text){const lines=text.split(/\r?\n/).map(normalize).filter(Boolean);let merchant='';for(const l of lines.slice(0,8)){if(/[A-Z]{3,}/i.test(l)&&!/(TOTAL|SUBTOTAL|TUNAI|KEMBALI|CHANGE|PPN|TAX|TELP|TELEPON|STRUK|INVOICE)/i.test(l)&&l.length<45){merchant=l;break}}const dateMatch=text.match(/\b(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})\b/);let date='';if(dateMatch){let [,d,m,y]=dateMatch;if(y.length===2)y='20'+y;date=`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`}const candidates=[];for(const l of lines){if(/TOTAL|GRAND TOTAL|JUMLAH|TAGIHAN|TOTAL BAYAR|AMOUNT/i.test(l)){const ns=l.match(/(?:Rp|IDR)?\s*([0-9][0-9., ]{2,})/gi)||[];ns.forEach(x=>{const n=toNumber(x);if(n>1000)candidates.push(n)})}}if(!candidates.length){for(const l of lines){const ns=l.match(/(?:Rp|IDR)?\s*([0-9][0-9., ]{3,})/gi)||[];ns.forEach(x=>{const n=toNumber(x);if(n>1000)candidates.push(n)})}}const amount=candidates.length?Math.max(...candidates):0;const category=guessCategory((merchant+' '+lines.join(' ')).toLowerCase());return{merchant,date,amount,category,raw:text}}
-function toNumber(s){let x=String(s).replace(/[^0-9.,]/g,'').replace(/\s/g,'');if(x.includes('.')&&x.includes(',')){if(x.lastIndexOf(',')>x.lastIndexOf('.'))x=x.replace(/\./g,'').replace(',','.');else x=x.replace(/,/g,'')}else if(x.includes(',')){const p=x.split(',');x=p[p.length-1].length===3?p.join(''):x.replace(',','.')}else if((x.match(/\./g)||[]).length>0){const p=x.split('.');x=p[p.length-1].length===3?p.join(''):x}const n=Number(x);return Number.isFinite(n)?Math.round(n):0}
-function guessCategory(s){if(/makan|resto|warung|kopi|food|cafe|bakso|nasi/.test(s))return'Makanan';if(/ojek|grab|gojek|taxi|tol|parkir|bensin|pertalite|pertamax|transport/.test(s))return'Transportasi';if(/supermarket|indomaret|alfamart|belanja|mall|minimarket/.test(s))return'Belanja';if(/pln|listrik|internet|telkom|air|tagihan|indihome/.test(s))return'Tagihan';if(/sekolah|kuliah|buku|kursus|pendidikan/.test(s))return'Pendidikan';if(/apotek|rumah sakit|clinic|kesehatan/.test(s))return'Kesehatan';if(/bioskop|game|hiburan|spotify|netflix/.test(s))return'Hiburan';return'Lainnya'}
-function applyParsed(p){if(p.merchant)$('merchant').value=p.merchant;if(p.date)$('date').value=p.date;if(p.amount)$('amount').value=p.amount;if(p.category)$('category').value=p.category;if(p.merchant)$('desc').value='Belanja di '+p.merchant}
-['camera','gallery'].forEach(id=>$(id).addEventListener('change',e=>{const f=e.target.files?.[0];if(f)scanReceipt(f)}));$('search').addEventListener('input',render);$('month').addEventListener('change',render);
-$('txForm').addEventListener('submit',async e=>{e.preventDefault();const t={id:editId||String(Date.now()),type:$('type').value,date:$('date').value||today(),merchant:$('merchant').value.trim(),desc:$('desc').value.trim(),category:$('category').value,amount:Number($('amount').value),receipt:!!currentReceipt};if(!t.desc||!t.amount)return toast('Lengkapi keterangan dan nominal.');if(editId){const i=data.transactions.findIndex(x=>x.id===editId);if(i>=0)data.transactions[i]=t}else data.transactions.push(t);if(currentReceipt)await putReceipt(t.id,currentReceipt);editId=null;currentReceipt=null;$('txForm').reset();$('type').value='expense';$('category').value='Makanan';$('date').value=today();$('preview').classList.add('hidden');$('scanBox').classList.add('hidden');$('formTitle').textContent='Tambah Transaksi';save();toast('Transaksi disimpan')});
-window.editTx=id=>{const t=data.transactions.find(x=>x.id===id);if(!t)return;editId=id;$('type').value=t.type;$('date').value=t.date;$('merchant').value=t.merchant||'';$('desc').value=t.desc;$('category').value=t.category;$('amount').value=t.amount;$('formTitle').textContent='Edit Transaksi';toast('Mode edit aktif')};
-window.deleteTx=id=>{if(confirm('Hapus transaksi ini?')){data.transactions=data.transactions.filter(x=>x.id!==id);save();toast('Transaksi dihapus')}};
-window.showReceipt=async id=>{const t=data.transactions.find(x=>x.id===id);if(!t?.receipt)return toast('Transaksi ini tidak memiliki foto struk.');try{const blob=await getReceipt(id);$('modalTitle').textContent=t.merchant||'Foto Struk';$('modalContent').innerHTML=`<img src="${URL.createObjectURL(blob)}" alt="Struk">`;$('modal').classList.remove('hidden')}catch{toast('Foto struk tidak ditemukan.')}};
-$('modalClose').onclick=$('modalOk').onclick=()=>{$('modal').classList.add('hidden');$('modalContent').innerHTML=''};
-$('exportBtn').onclick=()=>{const rows=[['Tanggal','Tipe','Merchant','Keterangan','Kategori','Nominal','Ada Struk'],...data.transactions.map(t=>[t.date,t.type,t.merchant||'',t.desc,t.category,t.amount,t.receipt?'YA':'TIDAK'])];const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='monikas-transaksi.csv';a.click();URL.revokeObjectURL(a.href)};
-$('resetBtn').onclick=()=>{if(confirm('Hapus semua transaksi dari perangkat ini?')){data=structuredClone(DEFAULT);save();toast('Data direset')}};
-$('demoBtn').onclick=()=>{cloudUser={uid:'device'};showApp('Mode Perangkat');};$('logoutBtn').onclick=()=>showLogin();
-function showLogin(){$('loginView').classList.remove('hidden');$('appView').classList.add('hidden')};function showApp(label){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userEmail').textContent=label||'Mode Perangkat';$('avatar').textContent=(label||'U').slice(0,1).toUpperCase();render()}
-$('loginTab').onclick=()=>{authMode='login';$('loginTab').classList.add('active');$('signupTab').classList.remove('active');$('name').classList.add('hidden');$('authBtn').textContent='Masuk'};
-$('signupTab').onclick=()=>{authMode='signup';$('signupTab').classList.add('active');$('loginTab').classList.remove('active');$('name').classList.remove('hidden');$('authBtn').textContent='Daftar'};
-$('authForm').addEventListener('submit',e=>{e.preventDefault();if(authMode==='signup'){toast('Akun cloud belum dikonfigurasi. Gunakan Mode Perangkat.');return}toast('Login cloud belum dikonfigurasi. Gunakan Mode Perangkat.');});
-showLogin();
+function setStatus(msg,mode='info'){$('statusText').textContent=msg;$('syncPill').textContent=mode==='ok'?'Sheets aktif':mode==='warn'?'Menunggu sinkronisasi':'Google Sheet'}
+function filtered(){const m=$('month').value||monthNow(),q=$('search').value.trim().toLowerCase();return data.transactions.filter(t=>(t.date||'').slice(0,7)===m).filter(t=>!q||`${t.desc||''} ${t.merchant||''} ${t.category||''}`.toLowerCase().includes(q)).sort((a,b)=>String(b.date).localeCompare(String(a.date))||Number(b.id)-Number(a.id))}
+function render(){const m=$('month').value||monthNow(),all=data.transactions.filter(t=>(t.date||'').slice(0,7)===m),inc=all.filter(t=>t.type==='income').reduce((a,t)=>a+Number(t.amount||0),0),exp=all.filter(t=>t.type!=='income').reduce((a,t)=>a+Number(t.amount||0),0);$('income').textContent=rupiah(inc);$('expense').textContent=rupiah(exp);$('balance').textContent=rupiah(inc-exp);$('ratio').textContent=inc?Math.round(exp/inc*100)+'%':'0%';const sums={};all.filter(t=>t.type!=='income').forEach(t=>sums[t.category]=(sums[t.category]||0)+Number(t.amount||0));$('budgets').innerHTML=CATS.map(c=>{const b=Number(data.budgets[c]||0),v=Number(sums[c]||0),p=b?Math.round(v/b*100):0;return `<div class="budget ${p>100?'over':''}"><div class="bline"><span>${c}</span><span>${rupiah(v)} / ${rupiah(b)}</span></div><div class="bar"><i style="width:${Math.min(100,p)}%"></i></div></div>`}).join('');const tx=filtered();$('list').innerHTML=tx.length?tx.map(t=>`<div class="item"><div><div class="title">${esc(t.desc||'-')}</div><div class="meta">${esc(t.date||'')} • ${esc(t.category||'Lainnya')}${t.merchant?' • '+esc(t.merchant):''}${t.receiptDataUrl?' • 📷 Struk':''}</div></div><div class="actions"><span class="amount ${t.type==='income'?'green':'red'}">${t.type==='income'?'+':'-'} ${rupiah(t.amount)}</span><button class="icon" onclick="editTx('${String(t.id)}')">✎</button><button class="icon" onclick="viewReceipt('${String(t.id)}')">📷</button><button class="icon" onclick="deleteTx('${String(t.id)}')">🗑</button></div></div>`).join(''):'<div class="empty" style="text-align:center;color:var(--muted);padding:24px">Belum ada transaksi pada bulan ini.</div>'}
+async function compressImage(file,maxSide=1400,quality=.78){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const scale=Math.min(1,maxSide/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));c.getContext('2d').drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',quality))};img.onerror=reject;img.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
+function parseAmount(text){const lines=text.split(/\n+/).map(x=>x.trim()).filter(Boolean);const totalLines=lines.filter(l=>/(total|jumlah|grand total|total bayar|amount|bayar)/i.test(l));const candidates=(totalLines.length?totalLines:lines).flatMap(l=>[...l.matchAll(/(?:rp\s*)?([0-9][0-9.,\s]{2,})/gi)].map(m=>m[1]));const nums=candidates.map(s=>Number(s.replace(/\s/g,'').replace(/\.(?=\d{3}(?:\D|$))/g,'').replace(/,(?=\d{3}(?:\D|$))/g,''))).filter(n=>Number.isFinite(n)&&n>0);return nums.length?Math.max(...nums):0}
+function detectMerchant(text){const lines=text.split(/\n+/).map(x=>x.trim()).filter(Boolean);return (lines.find(l=>l.length>2&&!/^(invoice|nota|receipt|struk|cashier|kasir|tanggal|date|telp|phone)/i.test(l))||'').slice(0,80)}
+function detectCategory(text){const s=text.toLowerCase();if(/warung|resto|restaurant|cafe|kopi|makan|food|bakery|minum|ayam|mie|nas/.test(s))return'Makanan';if(/spbu|pertamina|indomaret|alfamart|grab|gojek|taxi|tol|parkir|bensin|transport/.test(s))return'Transportasi';if(/tagihan|listrik|pln|internet|wifi|pulsa|air|pdam/.test(s))return'Tagihan';if(/sekolah|kampus|kuliah|buku|kursus/.test(s))return'Pendidikan';if(/obat|apotek|rumah sakit|hospital|clinic|kesehatan/.test(s))return'Kesehatan';if(/bioskop|game|hiburan|karaoke/.test(s))return'Hiburan';if(/supermarket|market|mall|belanja|shop|store/.test(s))return'Belanja';return'Lainnya'}
+function detectDate(text){const m=text.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);if(!m)return'';let y=Number(m[3]);if(y<100)y+=2000;return `${y}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`}
+async function scanFile(file){$('preview').classList.remove('hidden');$('preview').src=URL.createObjectURL(file);$('scanBox').classList.remove('hidden');$('scanText').textContent='Menyiapkan foto…';$('scanProgress').style.width='5%';currentReceipt={dataUrl:await compressImage(file),ocrText:'',confidence:'',name:file.name};try{const result=await Tesseract.recognize(file,'ind',{logger:m=>{if(m.status==='recognizing text'){const p=Math.round((m.progress||0)*100);$('scanText').textContent='Membaca struk '+p+'%';$('scanProgress').style.width=p+'%'}}});const text=result.data.text||'';const conf=Number(result.data.confidence||0);currentReceipt.ocrText=text;currentReceipt.confidence=(conf/100).toFixed(2);const amount=parseAmount(text);const merchant=detectMerchant(text);const cat=detectCategory(text);const date=detectDate(text);if(amount)$('amount').value=amount;if(merchant)$('merchant').value=merchant;if(date)$('date').value=date;if(cat)$('category').value=cat;if(!$('desc').value)$('desc').value='Belanja di '+(merchant||'toko');$('scanText').textContent='✅ Struk terbaca. Periksa hasil sebelum simpan.';$('scanProgress').style.width='100%';toast('Scanner selesai. Cek nominal dan detail lalu Simpan Transaksi.')}catch(e){$('scanText').textContent='⚠️ OCR gagal. Anda tetap bisa isi manual.';$('scanProgress').style.width='0%';toast('OCR gagal, tetapi foto tetap bisa disimpan bersama transaksi.')}}
+function clearReceipt(){$('preview').src='';$('preview').classList.add('hidden');$('scanBox').classList.add('hidden');currentReceipt=null}
+async function sendToSheet(t){if(!GAS_URL)return false;const payload={action:'saveTransaction',id:String(t.id),date:t.date,type:t.type||'expense',merchant:t.merchant||'',description:t.desc||'',category:t.category||'Lainnya',amount:Number(t.amount)||0,paymentMethod:t.paymentMethod||'',ocrConfidence:t.ocrConfidence||'',ocrText:t.ocrText||'',source:'MoniKas V3'};if(t.receiptDataUrl)payload.receipt={dataUrl:t.receiptDataUrl,confidence:t.ocrConfidence||'',ocrText:t.ocrText||''};try{await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});return true}catch(e){return false}}
+async function syncAll(){if(syncing)return;syncing=true;setStatus('Mengirim transaksi ke Google Sheet…');let ok=0;for(const t of data.transactions){if(await sendToSheet(t))ok++}syncing=false;localStorage.setItem(KEY,JSON.stringify(data));setStatus(`${ok} transaksi dikirim. Jika ada data lama, tekan Sinkronisasi lagi.`,'ok');toast(`${ok} transaksi dikirim ke Google Sheet`)}
+$('txForm').addEventListener('submit',async e=>{e.preventDefault();const t={id:editId||Date.now(),date:$('date').value,type:$('type').value,merchant:$('merchant').value.trim(),desc:$('desc').value.trim(),category:$('category').value,amount:Number($('amount').value)||0,paymentMethod:'',ocrConfidence:currentReceipt?.confidence||'',ocrText:currentReceipt?.ocrText||'',receiptDataUrl:currentReceipt?.dataUrl||'',source:'MoniKas V3'};if(!t.amount||!t.desc){toast('Isi keterangan dan nominal terlebih dahulu.');return}const idx=data.transactions.findIndex(x=>String(x.id)===String(t.id));if(idx>=0)data.transactions[idx]={...data.transactions[idx],...t};else data.transactions.push(t);persist();setStatus('Transaksi tersimpan di perangkat. Mengirim ke Google Sheet…');$('saveTx').disabled=true;const ok=await sendToSheet(t);$('saveTx').disabled=false;if(ok){setStatus('✅ Transaksi berhasil dikirim ke Google Sheet.','ok');toast('✅ Transaksi tersimpan dan dikirim ke Google Sheet')}else{setStatus('⚠️ Transaksi tersimpan di perangkat. Sinkronisasi akan dicoba lagi.','warn');toast('Data tersimpan di perangkat. Tekan Sinkronisasi untuk mengirim ulang.')}editId=null;$('formTitle').textContent='Tambah Transaksi';$('txForm').reset();$('date').value=today();clearReceipt()});
+window.editTx=id=>{const t=data.transactions.find(x=>String(x.id)===String(id));if(!t)return;editId=t.id;$('formTitle').textContent='Edit Transaksi';$('type').value=t.type||'expense';$('date').value=t.date||today();$('merchant').value=t.merchant||'';$('desc').value=t.desc||'';$('category').value=t.category||'Lainnya';$('amount').value=t.amount||0;currentReceipt=t.receiptDataUrl?{dataUrl:t.receiptDataUrl,ocrText:t.ocrText||'',confidence:t.ocrConfidence||''}:null;toast('Mode edit aktif. Setelah simpan, data akan diperbarui di Sheet.')};
+window.deleteTx=async id=>{const t=data.transactions.find(x=>String(x.id)===String(id));if(!t||!confirm('Hapus transaksi ini?'))return;data.transactions=data.transactions.filter(x=>String(x.id)!==String(id));persist();try{await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'deleteTransaction',id:String(id)})});setStatus('Transaksi dihapus. Sinkronisasi penghapusan dikirim ke Sheet.','ok')}catch(e){setStatus('Transaksi dihapus di perangkat. Penghapusan cloud perlu dicoba lagi.','warn')}};
+window.viewReceipt=id=>{const t=data.transactions.find(x=>String(x.id)===String(id));if(!t)return;if(t.receiptDataUrl){$('modalContent').innerHTML=`<img src="${t.receiptDataUrl}" alt="Struk"><div class="hint" style="margin-top:8px">${esc(t.ocrText||'Tidak ada hasil OCR')}</div>`;$('modalTitle').textContent=t.desc||'Struk';$('modal').classList.remove('hidden')}else toast('Transaksi ini tidak memiliki foto struk.')};
+$('camera').addEventListener('change',e=>{if(e.target.files?.[0])scanFile(e.target.files[0])});$('gallery').addEventListener('change',e=>{if(e.target.files?.[0])scanFile(e.target.files[0])});$('clearReceipt').onclick=clearReceipt;$('search').addEventListener('input',render);$('month').addEventListener('change',render);$('syncBtn').onclick=syncAll;$('syncBtn2').onclick=syncAll;$('exportBtn').onclick=()=>{const tx=filtered();const head=['Tanggal','Jenis','Toko/Sumber','Keterangan','Kategori','Nominal','OCR Confidence','Sumber'];const csv=[head,...tx.map(t=>[t.date,t.type,t.merchant||'',t.desc||'',t.category||'',t.amount,t.ocrConfidence||'',t.source||''])].map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='MoniKas_'+($('month').value||monthNow())+'.csv';a.click()};$('resetBtn').onclick=()=>{if(confirm('Reset semua data di perangkat ini?')){data=structuredClone(DEFAULT);persist();setStatus('Data perangkat direset.');toast('Data perangkat direset.')}};$('modalClose').onclick=$('modalOk').onclick=()=>$('modal').classList.add('hidden');
+window.addEventListener('online',()=>{setStatus('Internet tersambung. Siap sinkronisasi.','ok')});window.addEventListener('offline',()=>{setStatus('Offline. Data tetap tersimpan di perangkat.','warn')});
+render();setStatus(navigator.onLine?'Siap. Data akan dikirim ke Google Sheet saat disimpan.':'Offline. Data akan disinkronkan saat internet tersedia.');
 </script>
-<script src="sheet-sync.js"></script>
 </body>
 </html>
