@@ -1,5 +1,5 @@
-const CACHE='monikas-v8-cloud-loader-1';
-const APP_ASSETS=['./','./index.html','./dashboard.html','./manifest.json','./icon.svg','./backend-config.js','./sheet-sync.js','./monitoring.js'];
+const CACHE='monikas-v9-cloud-watchdog-1';
+const APP_ASSETS=['./','./index.html','./dashboard.html','./manifest.json','./icon.svg','./backend-config.js','./sheet-sync.js','./monitoring.js','./monitoring-fix.js'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(
@@ -31,8 +31,9 @@ self.addEventListener('fetch',event=>{
           const type=response.headers.get('content-type')||'';
           if(!type.includes('text/html')) return response;
           const html=await response.text();
-          if(html.includes('monitoring.js')) return new Response(html,{status:response.status,statusText:response.statusText,headers:response.headers});
-          const injected=html.replace('</body>','<script src="./monitoring.js?v=8"></script></body>');
+          const marker='monitoring-fix.js';
+          if(html.includes(marker)) return new Response(html,{status:response.status,statusText:response.statusText,headers:response.headers});
+          const injected=html.replace('</body>','<script src="./monitoring-fix.js?v=9"></script></body>');
           const headers=new Headers(response.headers);
           headers.set('Content-Type','text/html; charset=utf-8');
           return new Response(injected,{status:response.status,statusText:response.statusText,headers});
