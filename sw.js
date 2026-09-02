@@ -1,5 +1,5 @@
-const CACHE='monikas-v10-pos-dana-1';
-const APP_ASSETS=['./','./index.html','./dashboard.html','./manifest.json','./icon.svg','./backend-config.js','./sheet-sync.js','./monitoring.js','./pos-dana.js'];
+const CACHE='monikas-v11-funds-1';
+const APP_ASSETS=['./','./index.html','./dashboard.html','./manifest.json','./icon.svg','./backend-config.js','./sheet-sync.js','./monitoring.js','./funds-v5.js'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(
@@ -32,8 +32,8 @@ self.addEventListener('fetch',event=>{
           if(!type.includes('text/html')) return response;
           const html=await response.text();
           let injected=html;
-          if(!injected.includes('monitoring.js')) injected=injected.replace('</body>','<script src="./monitoring.js?v=10"></script></body>');
-          if(!injected.includes('pos-dana.js')) injected=injected.replace('</body>','<script src="./pos-dana.js?v=1"></script></body>');
+          if(!injected.includes('monitoring.js')) injected=injected.replace('</body>','<script src="./monitoring.js?v=11"></script></body>');
+          if(!injected.includes('funds-v5.js')) injected=injected.replace('</body>','<script src="./funds-v5.js?v=1"></script></body>');
           const headers=new Headers(response.headers);
           headers.set('Content-Type','text/html; charset=utf-8');
           return new Response(injected,{status:response.status,statusText:response.statusText,headers});
