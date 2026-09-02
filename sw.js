@@ -1,13 +1,15 @@
-const CACHE='monikas-v3-no-login-1';
+const CACHE='monikas-v4-monitoring-1';
 self.addEventListener('install',event=>{
   event.waitUntil(
     caches.open(CACHE).then(cache=>cache.addAll([
       './',
       './index.html',
+      './dashboard.html',
       './manifest.json',
       './icon.svg',
       './backend-config.js',
-      './sheet-sync.js'
+      './sheet-sync.js',
+      './monitoring.js'
     ])).then(()=>self.skipWaiting())
   );
 });
