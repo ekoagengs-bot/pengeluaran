@@ -76,13 +76,32 @@ function saveReceipt(dataUrl,date,id,folder){
   return {url:file.getUrl(),fileId:file.getId(),name:file.getName()};
 }
 
+function sheetDateToISO(value){
+  if(value instanceof Date && !isNaN(value.getTime())){
+    return Utilities.formatDate(value,Session.getScriptTimeZone(),'yyyy-MM-dd');
+  }
+  const s=String(value||'').trim();
+  if(!s)return '';
+  if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(s)){
+    const m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    return m[1]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[3]).padStart(2,'0');
+  }
+  if(/^\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}$/.test(s)){
+    const m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})$/);
+    let y=Number(m[3]); if(y<100)y+=2000;
+    return y+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0');
+  }
+  const d=new Date(s);
+  return isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'yyyy-MM-dd');
+}
+
 function getTransactionsFromSheet(){
   const ss=SpreadsheetApp.openById(SPREADSHEET_ID);const sh=ss.getSheetByName(SHEET_TX);
   if(!sh||sh.getLastRow()<2)return {ok:true,data:[],count:0,source:'Google Sheet'};
   const rows=sh.getRange(2,1,sh.getLastRow()-1,HEADERS.length).getValues();
   const data=rows.map(function(r){return {
-    id:String(r[1]||''),date:String(r[2]||''),type:String(r[3]||'expense').toLowerCase()==='income'?'income':'expense',
-    merchant:String(r[4]||''),description:String(r[5]||''),category:String(r[6]||'Lainnya'),amount:Number(r[7])||0,
+    id:String(r[1]||''),date:sheetDateToISO(r[2]),type:String(r[3]||'expense').toLowerCase()==='income'?'income':'expense',
+    merchant:String(r[4]||''),desc:String(r[5]||''),description:String(r[5]||''),category:String(r[6]||'Lainnya'),amount:Number(r[7])||0,
     paymentMethod:String(r[8]||''),ocrConfidence:String(r[9]||''),ocrText:String(r[10]||''),receiptUrl:String(r[11]||''),receiptFileId:String(r[12]||''),source:String(r[13]||APP_NAME),synced:true
   };}).filter(x=>x.id&&x.date);
   return {ok:true,data:data,count:data.length,source:'Google Sheet',spreadsheetId:SPREADSHEET_ID};
