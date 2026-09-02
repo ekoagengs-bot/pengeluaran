@@ -1,25 +1,65 @@
-/* MoniKas Gold v3 - gram-first, reliable submit + sync */
+/* MoniKas Gold v5 - permanent gram-first UI for Ayah/Biyan/Eren/Bunda */
 (function(){
 'use strict';
-const GAS='https://script.google.com/macros/s/AKfycbz8kXgT4mA_plY2n-g6XVSbqSy57ZVphjdjs4vF8_bo32bWD0YpSqQ0tK3zYB6OmC4_6w/exec';
 const GOLD=new Set(['Ayah','Biyan','Eren','Bunda']);
-let price={sell:2624000,buyback:2477000,date:'',source:'ANTAM Logam Mulia'};
+const GAS='https://script.google.com/macros/s/AKfycbz8kXgT4mA_plY2n-g6XVSbqSy57ZVphjdjs4vF8_bo32bWD0YpSqQ0tK3zYB6OmC4_6w/exec';
+let buyback=2477000;
 const $=id=>document.getElementById(id);
 const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
-const grams=n=>Number(n||0).toLocaleString('id-ID',{minimumFractionDigits:0,maximumFractionDigits:4});
-function jsonp(url){return new Promise((resolve,reject)=>{const cb='mkGoldV3_'+Date.now()+'_'+Math.random().toString(36).slice(2),s=document.createElement('script');let done=false;const finish=(fn,v)=>{if(done)return;done=true;clearTimeout(tm);s.remove();try{delete window[cb]}catch(e){}fn(v)};const tm=setTimeout(()=>finish(reject,new Error('timeout')),12000);window[cb]=v=>finish(resolve,v);s.onerror=()=>finish(reject,new Error('network'));s.src=url+(url.includes('?')?'&':'?')+'callback='+encodeURIComponent(cb)+'&_='+Date.now();document.head.appendChild(s)})}
-function isGold(){return GOLD.has(String($('fund')?.value||'').trim())}
-function findForm(){return $('txForm')||document.querySelector('form')}
-function ensureUI(){const fund=$('fund'),form=findForm();if(!fund||!form)return;if(!$('goldBoxV3')){const box=document.createElement('div');box.id='goldBoxV3';box.className='hidden';box.style.cssText='margin-top:10px;padding:14px;border:1px solid #f0c36a;border-radius:14px;background:#fffbeb';box.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div><b>🪙 Tabungan Emas</b><div class="hint">Untuk Ayah, Biyan, Eren, dan Bunda masukkan jumlah emas dalam gram. Nilai rupiah dihitung otomatis.</div></div><span class="pill" style="background:#fef3c7;color:#92400e">GRAM</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px"><div><div class="label" style="margin-bottom:6px">Jumlah Emas (gram)</div><input id="goldGramsV3" class="input" type="number" min="0.0001" step="0.0001" inputmode="decimal" placeholder="0,0000"></div><div><div class="label" style="margin-bottom:6px">Nilai Rupiah</div><input id="goldValueV3" class="input" type="text" readonly placeholder="Otomatis"></div></div><div id="goldPriceV3" class="hint" style="margin-top:8px"></div>';const amount=$('amount');(amount?.closest('.row')||fund.parentElement).insertAdjacentElement('beforebegin',box);$('goldGramsV3').addEventListener('input',update)}const amount=$('amount');if(amount)amount.dataset.normalPlaceholder=amount.placeholder||'Nominal (Rp)';if(fund&&!fund.dataset.goldV3){fund.dataset.goldV3='1';fund.addEventListener('change',toggle,true)}toggle();form.addEventListener('submit',prepare,true)}
-function toggle(){const gold=isGold(),box=$('goldBoxV3'),amount=$('amount');if(box)box.classList.toggle('hidden',!gold);if(amount){amount.readOnly=gold;amount.placeholder=gold?'Nilai Rupiah (otomatis)':(amount.dataset.normalPlaceholder||'Nominal (Rp)');amount.required=true}update()}
-function update(){const g=Number($('goldGramsV3')?.value||0),v=Math.round(g*(Number(price.buyback)||0));if($('goldValueV3'))$('goldValueV3').value=g?rupiah(v):'';if($('amount')&&isGold())$('amount').value=g?String(v):'';if($('goldPriceV3'))$('goldPriceV3').textContent=`Buyback ANTAM: ${rupiah(price.buyback)}/gram • Harga jual dasar: ${rupiah(price.sell)}/gram${price.date?' • '+price.date:''}`}
-function ensureHidden(name){const form=findForm();if(!form)return null;let el=form.querySelector('[data-gold-field="'+name+'"]');if(!el){el=document.createElement('input');el.type='hidden';el.name=name;el.dataset.goldField=name;form.appendChild(el)}return el}
-function prepare(ev){if(!isGold())return;const g=Number($('goldGramsV3')?.value||0);if(!(g>0)){ev.preventDefault();ev.stopImmediatePropagation();alert('Masukkan jumlah emas dalam gram.');return false}const p=Number(price.buyback)||0,v=Math.round(g*p);$('amount').value=String(v);const vals={goldGrams:g,goldPrice:p,goldValue:v,goldValuation:'buyback',goldPriceDate:price.date||'',fund:String($('fund').value||'')};Object.entries(vals).forEach(([k,val])=>{const el=ensureHidden(k);if(el)el.value=String(val)});window.__mkGoldDraft=vals;return true}
-function patchFetch(){if(!window.fetch||window.fetch.__goldV3)return;const orig=window.fetch;async function wrapped(input,init){let next=init;try{const d=window.__mkGoldDraft;if(d&&d.fund&&next&&next.body){if(typeof next.body==='string'){try{const o=JSON.parse(next.body);Object.assign(o,d,{amount:d.goldValue});next={...next,body:JSON.stringify(o)}}catch(e){try{const u=new URLSearchParams(next.body);Object.entries(d).forEach(([k,v])=>u.set(k,String(v)));u.set('amount',String(d.goldValue));next={...next,body:u.toString()}}catch(e2){}}}}}catch(e){}const r=await orig.call(this,input,next);window.__mkGoldDraft=null;return r}wrapped.__goldV3=true;window.fetch=wrapped}
-function patchXHR(){if(XMLHttpRequest.prototype.send.__goldV3)return;const orig=XMLHttpRequest.prototype.send;function send(body){const d=window.__mkGoldDraft;if(d&&d.fund){try{if(typeof body==='string'){try{const o=JSON.parse(body);Object.assign(o,d,{amount:d.goldValue});body=JSON.stringify(o)}catch(e){const u=new URLSearchParams(body);Object.entries(d).forEach(([k,v])=>u.set(k,String(v)));u.set('amount',String(d.goldValue));body=u.toString()}}}catch(e){}}window.__mkGoldDraft=null;return orig.call(this,body)}send.__goldV3=true;XMLHttpRequest.prototype.send=send}
-async function loadPrice(){try{const r=await jsonp(GAS+'?action=getGoldPrice');if(r&&r.ok)price={...price,...r}}catch(e){}update();if($('goldBannerV3'))$('goldBannerV3').textContent=`ANTAM buyback ${rupiah(price.buyback)}/gram • harga jual dasar ${rupiah(price.sell)}/gram${price.date?' • '+price.date:''}`}
-function renderFunds(){jsonp(GAS+'?action=getFunds').then(r=>{if(!r?.ok)return;const host=$('funds');if(!host)return;(r.data||[]).filter(f=>GOLD.has(f.name)).forEach(f=>{const card=[...host.querySelectorAll('.fund')].find(c=>c.querySelector('.fund-name')?.textContent.trim()===f.name);if(!card)return;const g=Number(f.goldGrams||0),v=Number(f.goldValue||0),b=card.querySelector('.fund-bal'),m=card.querySelector('.fund-meta');if(b)b.innerHTML=`${grams(g)} gram<br><span style="font-size:17px">≈ ${rupiah(v)}</span>`;if(m)m.textContent=`Saldo emas ${grams(g)} gram • Buyback ${rupiah(price.buyback)}/gram`})}).catch(()=>{})}
-function addBanner(){const sec=$('funds')?.closest('.card');if(!sec||$('goldBannerV3'))return;const b=document.createElement('div');b.id='goldBannerV3';b.style.cssText='margin-top:12px;padding:12px;background:#fffbeb;border:1px solid #f0c36a;border-radius:13px';b.textContent='Mengambil harga emas terbaru…';sec.appendChild(b)}
-function init(){ensureUI();patchFetch();patchXHR();addBanner();loadPrice();renderFunds();setInterval(()=>{loadPrice();renderFunds()},60000);setTimeout(()=>{ensureUI();patchFetch();patchXHR()},1500)}
+function gold(){return GOLD.has(String($('fund')?.value||'').trim())}
+function ensure(){
+ const fund=$('fund'), amount=$('amount'), form=$('txForm');
+ if(!fund||!amount||!form)return;
+ let box=$('monikasGoldNative');
+ if(!box){
+  box=document.createElement('div');box.id='monikasGoldNative';
+  box.style.cssText='display:none;margin:0 0 10px;padding:14px;border:1.5px solid #e7b84b;border-radius:14px;background:#fffbeb';
+  box.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px"><div><b style="font-size:15px">🪙 Tabungan Emas</b><div style="font-size:12px;color:#64748b;margin-top:3px">Untuk Ayah, Biyan, Eren, dan Bunda gunakan gram emas.</div></div><span style="font-size:11px;font-weight:900;padding:5px 9px;border-radius:999px;background:#fef3c7;color:#92400e">GRAM</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><div style="font-size:11px;color:#64748b;margin-bottom:5px">Jumlah Emas (gram)</div><input id="monikasGoldGrams" class="input" type="number" min="0.0001" step="0.0001" inputmode="decimal" placeholder="contoh 2,5"></div><div><div style="font-size:11px;color:#64748b;margin-bottom:5px">Nilai Rupiah</div><input id="monikasGoldValue" class="input" type="text" readonly placeholder="Otomatis"></div></div><div id="monikasGoldPrice" style="font-size:11px;color:#64748b;margin-top:8px"></div>';
+  const row=amount.closest('.row');
+  if(row)row.insertAdjacentElement('beforebegin',box);else amount.parentElement.insertAdjacentElement('beforebegin',box);
+  $('monikasGoldGrams').addEventListener('input',calc);
+ }
+ apply();
+ if(!fund.dataset.monikasGold5){fund.dataset.monikasGold5='1';fund.addEventListener('change',apply,true)}
+ if(!form.dataset.monikasGold5){form.dataset.monikasGold5='1';form.addEventListener('submit',validate,true)}
+}
+function apply(){
+ const amount=$('amount'),box=$('monikasGoldNative'),is=gold();
+ if(box)box.style.setProperty('display',is?'block':'none','important');
+ if(amount){
+  if(!amount.dataset.mkNormalPlaceholder)amount.dataset.mkNormalPlaceholder='Nominal (Rp)';
+  amount.readOnly=is;
+  amount.placeholder=is?'Nilai Rupiah (otomatis)':amount.dataset.mkNormalPlaceholder;
+ }
+ calc();
+}
+function calc(){
+ const g=Number($('monikasGoldGrams')?.value||0),v=Math.round(g*buyback);
+ if($('monikasGoldValue'))$('monikasGoldValue').value=g?rupiah(v):'';
+ if($('monikasGoldPrice'))$('monikasGoldPrice').textContent=`Harga buyback: ${rupiah(buyback)}/gram`;
+ if($('amount')&&gold())$('amount').value=g?String(v):'';
+}
+function validate(e){
+ if(!gold())return;
+ const form=$('txForm'),g=Number($('monikasGoldGrams')?.value||0),v=Math.round(g*buyback);
+ if(!(g>0)){e.preventDefault();e.stopImmediatePropagation();alert('Untuk Tabungan Emas, masukkan jumlah emas dalam gram.');return false}
+ $('amount').value=String(v);
+ [['goldGrams',g],['goldPrice',buyback],['goldValue',v],['goldValuation','buyback'],['goldPriceDate',''],['fund',$('fund').value]].forEach(([n,x])=>{
+  let el=form.querySelector('[data-mk-gold-field="'+n+'"]');
+  if(!el){el=document.createElement('input');el.type='hidden';el.name=n;el.dataset.mkGoldField=n;form.appendChild(el)}
+  el.value=String(x);
+ });
+}
+function loadPrice(){
+ const cb='mkGoldPrice5_'+Date.now(),s=document.createElement('script');
+ window[cb]=r=>{try{if(r&&r.ok&&Number(r.buyback)>0)buyback=Number(r.buyback);calc()}finally{delete window[cb];s.remove()}};
+ s.onerror=()=>{delete window[cb];s.remove()};
+ s.src=GAS+'?action=getGoldPrice&callback='+cb+'&_='+Date.now();document.head.appendChild(s);
+}
+function init(){
+ ensure();loadPrice();
+ const mo=new MutationObserver(()=>ensure());mo.observe(document.body,{childList:true,subtree:true});
+ setInterval(ensure,1000);setInterval(loadPrice,300000);
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
