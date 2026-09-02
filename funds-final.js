@@ -1,7 +1,7 @@
 /* MoniKas - final source funds authority v2 */
 (function(){
   'use strict';
-  const GAS='https://script.google.com/macros/s/AKfycbxNM8ktGCa85FzdTHhjnynnJAzy1nL-7VXYaPiaKTsY9Xa79AVn3B8n_FcKUj8UDLyW9Q/exec';
+  const GAS='https://script.google.com/macros/s/AKfycbz8kXgT4mA_plY2n-g6XVSbqSy57ZVphjdjs4vF8_bo32bWD0YpSqQ0tK3zYB6OmC4_6w/exec';
   const DESIRED=[
     {name:'Bank BNI',group:'Bank'},
     {name:'Bank Jago',group:'Bank'},
@@ -31,11 +31,11 @@
       const r=await getFunds();
       funds=Array.isArray(r?.data)?r.data:[];
       const have=new Set(funds.map(f=>String(f.name||'').trim()));
-      for(const d of DESIRED){if(!have.has(d.name))await post('addFund',{name:d.name,opening:0}).catch(()=>{});}
-      for(const f of funds){if(HIDE.includes(String(f.name||'')) && f.active!==false)await post('updateFund',{id:f.id,name:f.name,active:false}).catch(()=>{});}
+      for(const d of DESIRED) if(!have.has(d.name)) await post('addFund',{name:d.name,opening:0}).catch(()=>{});
+      for(const f of funds) if(HIDE.includes(String(f.name||'')) && f.active!==false) await post('updateFund',{id:f.id,name:f.name,active:false}).catch(()=>{});
       const fresh=await getFunds().catch(()=>null);
-      if(fresh?.ok)funds=Array.isArray(fresh.data)?fresh.data:funds;
-    }catch(e){/* keep UI usable */}
+      if(fresh?.ok) funds=Array.isArray(fresh.data)?fresh.data:funds;
+    }catch(e){}
   }
 
   function styles(){
@@ -74,7 +74,6 @@
       if(!list.some(x=>String(x).toLowerCase()===name.toLowerCase())){list.push(name);localStorage.setItem('monikas_income_types',JSON.stringify(list));}
       renderIncomeType();if($('incomeType'))$('incomeType').value=name;
     };
-    $('type').addEventListener('change',syncIncomeVisibility);
   }
   function renderIncomeType(){
     const s=$('incomeType');if(!s)return;
@@ -95,41 +94,17 @@
     }
     s.innerHTML=html;
     s.value=DESIRED.some(d=>d.name===current)?current:'Bank Jago';
-    localStorage.setItem(FUND_KEY,s.value);
-    updateHint();
-    s.onchange=updateHint;
+    localStorage.setItem(FUND_KEY,s.value);updateHint();s.onchange=updateHint;
   }
-  function updateHint(){
-    const v=$('fund')?.value;const f=funds.find(x=>x.name===v);
-    if($('fundHint'))$('fundHint').textContent=`Saldo ${v}: ${rupiah(f?.balance||0)}`;
-  }
+  function updateHint(){const v=$('fund')?.value;const f=funds.find(x=>x.name===v);if($('fundHint'))$('fundHint').textContent=`Saldo ${v}: ${rupiah(f?.balance||0)}`;}
 
   function renderSection(){
     const oldGrid=$('fundsGrid');
-    const oldSection=oldGrid?.closest('.card.section') || (oldGrid ? oldGrid.parentElement : null);
+    const oldSection=oldGrid?.closest('.card.section')||(oldGrid?oldGrid.parentElement:null);
     if(!oldSection)return;
     oldSection.classList.add('fund-final-section');
-    oldSection.innerHTML=`
-      <div class="fund-final-headrow">
-        <div><h2 class="fund-final-title">💰 Pos Pemasukan / Sumber Dana</h2><div class="fund-final-sub">Pilih sumber dana saat mencatat transaksi. Pemasukan menambah saldo, pengeluaran mengurangi saldo.</div></div>
-      </div>
-      <div id="fundsGrid" class="fund-final-grid"></div>
-      <div class="fund-final-manager">
-        <div class="label"><b>Tambah sumber dana manual</b></div>
-        <div class="fund-final-sub">Bisa digunakan untuk rekening/dompet baru. Ini tidak mengubah 10 sumber utama.</div>
-        <div style="display:grid;grid-template-columns:1.4fr 1fr auto;gap:8px;margin-top:8px" class="fund-final-addrow">
-          <input id="fundFinalName" class="fund-final-input" placeholder="Nama sumber dana">
-          <input id="fundFinalOpening" class="fund-final-input" type="number" min="0" step="1" placeholder="Saldo awal (Rp)">
-          <button id="fundFinalAdd" class="btn secondary" type="button">+ Tambah</button>
-        </div>
-      </div>`;
-    const add=$('fundFinalAdd');
-    if(add)add.onclick=async()=>{
-      const name=($('fundFinalName').value||'').trim();const opening=Number($('fundFinalOpening').value)||0;
-      if(!name)return;
-      if(DESIRED.some(d=>d.name.toLowerCase()===name.toLowerCase()))return;
-      try{await post('addFund',{name,opening});$('fundFinalName').value='';$('fundFinalOpening').value='';await loadAndRender();}catch(e){}
-    };
+    oldSection.innerHTML=`<div class="fund-final-headrow"><div><h2 class="fund-final-title">💰 Pos Pemasukan / Sumber Dana</h2><div class="fund-final-sub">Pilih sumber dana saat mencatat transaksi. Pemasukan menambah saldo, pengeluaran mengurangi saldo.</div></div></div><div id="fundsGrid" class="fund-final-grid"></div><div class="fund-final-manager"><div class="label"><b>Tambah sumber dana manual</b></div><div class="fund-final-sub">Bisa digunakan untuk rekening/dompet baru.</div><div class="fund-final-addrow" style="display:grid;grid-template-columns:1.4fr 1fr auto;gap:8px;margin-top:8px"><input id="fundFinalName" class="fund-final-input" placeholder="Nama sumber dana"><input id="fundFinalOpening" class="fund-final-input" type="number" min="0" step="1" placeholder="Saldo awal (Rp)"><button id="fundFinalAdd" class="btn secondary" type="button">+ Tambah</button></div></div>`;
+    $('fundFinalAdd').onclick=async()=>{const name=($('fundFinalName').value||'').trim();const opening=Number($('fundFinalOpening').value)||0;if(!name||DESIRED.some(d=>d.name.toLowerCase()===name.toLowerCase()))return;await post('addFund',{name,opening}).catch(()=>{});$('fundFinalName').value='';$('fundFinalOpening').value='';await loadAndRender();};
   }
 
   function renderCards(){
@@ -139,32 +114,21 @@
   }
 
   function cleanLegacy(){
-    // Remove legacy cards/select options created by older modules.
     document.querySelectorAll('.fund-v5-manager,.fund-v5-card,.fund-row').forEach(el=>el.remove());
-    const s=$('fund');
-    if(s) Array.from(s.options).forEach(o=>{if(!DESIRED.some(d=>d.name===o.value))o.remove();});
+    const s=$('fund');if(s)Array.from(s.options).forEach(o=>{if(!DESIRED.some(d=>d.name===o.value))o.remove();});
   }
 
-  async function loadAndRender(){
-    await ensureBackend();
-    renderSection();
-    renderCards();
-    renderSelect();
-    cleanLegacy();
-    buildIncomeType();
-  }
+  async function loadAndRender(){await ensureBackend();renderSection();renderCards();renderSelect();cleanLegacy();buildIncomeType();}
 
   function watch(){
     const observer=new MutationObserver(()=>{
-      if(!document.body.contains($('fundsGrid'))){
-        try{renderSection();renderCards();renderSelect();buildIncomeType();}catch(e){}
-      }
+      if(!document.body.contains($('fundsGrid')))try{renderSection();renderCards();renderSelect();}
+      catch(e){}
       cleanLegacy();
     });
     observer.observe(document.body,{childList:true,subtree:true});
-    setInterval(()=>{loadAndRender().catch(()=>{});},60000);
+    setInterval(()=>loadAndRender().catch(()=>{}),60000);
   }
-
   function start(){styles();loadAndRender().then(watch).catch(()=>{renderSection();renderSelect();buildIncomeType();watch();});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(start,300));else setTimeout(start,300);
 })();
