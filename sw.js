@@ -1,4 +1,4 @@
-const CACHE='monikas-v4-monitoring-1';
+const CACHE='monikas-v5-dashboard-1';
 self.addEventListener('install',event=>{
   event.waitUntil(
     caches.open(CACHE).then(cache=>cache.addAll([
