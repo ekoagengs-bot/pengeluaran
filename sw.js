@@ -1,15 +1,8 @@
-const CACHE='monikas-v5-dashboard-1';
+const CACHE='monikas-v6-main-dashboard-recap-1';
 self.addEventListener('install',event=>{
   event.waitUntil(
     caches.open(CACHE).then(cache=>cache.addAll([
-      './',
-      './index.html',
-      './dashboard.html',
-      './manifest.json',
-      './icon.svg',
-      './backend-config.js',
-      './sheet-sync.js',
-      './monitoring.js'
+      './','./index.html','./dashboard.html','./manifest.json','./icon.svg','./backend-config.js','./sheet-sync.js','./monitoring.js'
     ])).then(()=>self.skipWaiting())
   );
 });
