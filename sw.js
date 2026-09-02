@@ -1,5 +1,5 @@
-const CACHE='monikas-v13-source-authority-1';
-const APP_ASSETS=['./','./index.html','./manifest.json','./icon.svg','./backend-config.js','./sheet-sync.js','./monitoring.js','./funds-v5.js','./funds-final.js'];
+const CACHE='monikas-v14-source-authority-1';
+const APP_ASSETS=['./','./index.html','./manifest.json','./icon.svg','./backend-config.js','./sheet-sync.js','./monitoring.js','./funds-final.js'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(
@@ -32,9 +32,10 @@ self.addEventListener('fetch',event=>{
           const html=await response.text();
           let injected=html;
           injected=injected.replace(/<script[^>]+pos-dana\.js[^>]*><\\/script>/gi,'');
-          if(!injected.includes('funds-v5.js')) injected=injected.replace('</body>','<script src="./funds-v5.js?v=13"></script></body>');
-          if(!injected.includes('monitoring.js')) injected=injected.replace('</body>','<script src="./monitoring.js?v=13"></script></body>');
-          if(!injected.includes('funds-final.js')) injected=injected.replace('</body>','<script src="./funds-final.js?v=13"></script></body>');
+          injected=injected.replace(/<script[^>]+funds-v5\.js[^>]*><\\/script>/gi,'');
+          injected=injected.replace(/<script[^>]+funds-final\.js[^>]*><\\/script>/gi,'');
+          if(!injected.includes('monitoring.js')) injected=injected.replace('</body>','<script src="./monitoring.js?v=14"></script></body>');
+          injected=injected.replace('</body>','<script src="./funds-final.js?v=14"></script></body>');
           const headers=new Headers(response.headers);
           headers.set('Content-Type','text/html; charset=utf-8');
           return new Response(injected,{status:response.status,statusText:response.statusText,headers:headers});
