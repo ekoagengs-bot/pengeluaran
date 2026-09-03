@@ -1,6 +1,6 @@
-/* MoniKas lightweight service worker v44
-   Fast startup: lazy-shim the heavy Tesseract library until OCR is actually used. */
-const CACHE='monikas-v44-lite';
+/* MoniKas lightweight service worker v45
+   Fast startup: OCR stays lazy and gold price is cached by the gold module. */
+const CACHE='monikas-v45-lite';
 const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./gold-native-v5.js'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS).catch(()=>{})).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
