@@ -1,9 +1,17 @@
-/* MoniKas lightweight service worker v45
-   Fast startup: OCR stays lazy and gold price is cached by the gold module. */
-const CACHE='monikas-v45-lite';
+/* MoniKas lightweight service worker v46
+   Fast startup: shell loads from cache first, latest HTML refreshes in background. */
+const CACHE='monikas-v46-lite';
 const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./gold-native-v5.js'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS).catch(()=>{})).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+async function staleWhileRevalidate(req){
+  const cache=await caches.open(CACHE);
+  const cached=await cache.match(req);
+  const network=fetch(req,{cache:'no-store'}).then(r=>{if(r&&r.ok)cache.put(req,r.clone());return r}).catch(()=>null);
+  if(cached){network.catch(()=>{});return cached;}
+  const fresh=await network;
+  return fresh||cache.match('./index.html');
+}
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET') return;
   const url=new URL(event.request.url);
@@ -14,8 +22,10 @@ self.addEventListener('fetch',event=>{
   }
   if(url.origin!==self.location.origin) return;
   if(event.request.mode==='navigate'){
-    event.respondWith(fetch(event.request,{cache:'no-store'}).catch(()=>caches.match('./index.html')));
+    event.respondWith(staleWhileRevalidate(event.request));
     return;
   }
+  const staticAsset=/(index\.html|gold-native-v5\.js|manifest\.json|icon\.svg|^\/$)/.test(url.pathname);
+  if(staticAsset){event.respondWith(staleWhileRevalidate(event.request));return;}
   event.respondWith(fetch(event.request).catch(()=>caches.match(event.request)));
 });
